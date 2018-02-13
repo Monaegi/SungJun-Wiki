@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from word.views import wiki_detail, wiki_create
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('wiki/detail/<title>/', wiki_detail, name='wiki-detail'),
+    path('wiki/create/', wiki_create, name='wiki-create'),
 ]
