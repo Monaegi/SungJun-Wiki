@@ -10,6 +10,7 @@ def wiki_create(request, title):
     if request.method == 'POST':
         form = WikiWordForm(request.POST)
         if form.is_valid():
+            form.instance.title = title
             form.save()
             return redirect('wiki-detail', title=title)
     else:
@@ -24,10 +25,21 @@ def wiki_create(request, title):
 
 def wiki_detail(request, title):
     try:
-        wikiword = get_object_or_404(WikiWord, title=title)
+        queryset = WikiWord.objects.all()
+        title_list = [x.title for x in queryset]
+        instance = get_object_or_404(WikiWord, title=title)
+        text = instance.text
+        text_to_list = text.split(' ')
+
+        for title in title_list:
+            if title in text_to_list:
+                text = text.replace(title, f'<a href="/wiki/detail/{title}">{title}</a>')
+
         context = {
-            'wikiword': wikiword
+            'instance': instance,
+            'text': text,
         }
         return render(request, 'wiki_detail.html', context)
+
     except Http404:
-        return redirect('wiki-create')
+        return redirect('wiki-create', title=title)

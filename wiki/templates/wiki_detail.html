@@ -10,10 +10,10 @@
 <body>
     <div>
         <div>
-            title: {{ wikiword.title }}
+            title: {{ instance.title }}
         </div>
         <div>
-            text: {{ wikiword.text|linebreaksbr }}
+            text: {{ text|safe|linebreaksbr }}
         </div>
     </div>
 </body>
