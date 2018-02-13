@@ -5,10 +5,10 @@ from word.forms import WikiWordForm
 from word.models import WikiWord
 
 
-def wiki_create(request):
+def wiki_create(request, title):
+    title = title
     if request.method == 'POST':
         form = WikiWordForm(request.POST)
-        title = request.POST['title']
         if form.is_valid():
             form.save()
             return redirect('wiki-detail', title=title)
@@ -16,6 +16,7 @@ def wiki_create(request):
         form = WikiWordForm()
 
     context = {
+        'title': title,
         'form': form,
     }
     return render(request, 'wiki_form.html', context)

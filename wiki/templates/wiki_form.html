@@ -8,6 +8,9 @@
     <title>Document</title>
 </head>
 <body>
+    <div>
+        title: {{ title }}
+    </div>
     <form action="" method="POST">
         {% csrf_token %}
         {% for field in form %}
@@ -16,6 +19,6 @@
                 {{ field }}
             </div>
         {% endfor %}
-    <button>포스트 등록</button>
+    <button>단어 등록</button>
 </body>
 </html>
