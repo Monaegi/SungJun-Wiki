@@ -29,7 +29,7 @@ def wiki_detail(request, title):
         instance = get_object_or_404(WikiWord, title=title)
         title_list = [x.title for x in queryset]
         text = instance.text
-        text_to_list = text.split(' ')
+        text_to_list = text.replace('\r\n', ' ').split(' ')
 
         for title in title_list:
             if title in text_to_list:
@@ -38,7 +38,8 @@ def wiki_detail(request, title):
         for value in text_to_list:
             if value.startswith('http://') or value.startswith('https://'):
                 text = text.replace(value, f'<a href="{value}">{value}</a>')
-
+            elif value.startswith('[') and value.endswith(']'):
+                text = text.replace(value, f'<a href="/wiki/detail/{value[1:-1]}">{value[1:-1]}</a>')
         context = {
             'instance': instance,
             'text': text,
