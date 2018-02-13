@@ -26,14 +26,18 @@ def wiki_create(request, title):
 def wiki_detail(request, title):
     try:
         queryset = WikiWord.objects.all()
-        title_list = [x.title for x in queryset]
         instance = get_object_or_404(WikiWord, title=title)
+        title_list = [x.title for x in queryset]
         text = instance.text
         text_to_list = text.split(' ')
 
         for title in title_list:
             if title in text_to_list:
                 text = text.replace(title, f'<a href="/wiki/detail/{title}">{title}</a>')
+
+        for value in text_to_list:
+            if value.startswith('http://') or value.startswith('https://'):
+                text = text.replace(value, f'<a href="{value}">{value}</a>')
 
         context = {
             'instance': instance,
