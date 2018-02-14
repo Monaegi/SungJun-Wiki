@@ -8,7 +8,6 @@ from word.models import WikiWord
 
 
 def wiki_create(request, title):
-    title = title.lower()
     if WikiWord.objects.filter(title=title).exists():
         return redirect('wiki-detail', title=title)
 
@@ -38,14 +37,12 @@ def wiki_detail(request, title):
         camel_list = re.findall(r'^[A-Z]\w*?[A-Z]\w*?$', text)
 
         for item in text_to_list:
-            if item.lower() in title_list:
+            if item.lower() in title_list or item in camel_list:
                 text = text.replace(item, f'<a href="/wiki/detail/{item}">{item}</a>')
             elif item.startswith('http://') or item.startswith('https://'):
                 text = text.replace(item, f'<a href="{item}">{item}</a>')
             elif item.startswith('[') and item.endswith(']'):
                 text = text.replace(item, f'<a href="/wiki/detail/{item[1:-1]}">{item[1:-1]}</a>')
-            elif item in camel_list:
-                text = text.replace(item, f'<a href="/wiki/detail/{item}">{item}</a>')
 
         context = {
             'instance': instance,
@@ -54,5 +51,4 @@ def wiki_detail(request, title):
         return render(request, 'wiki_detail.html', context)
 
     except Http404:
-        title = title.lower()
         return redirect('wiki-create', title=title)
