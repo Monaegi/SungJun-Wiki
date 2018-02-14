@@ -8,7 +8,7 @@ from word.models import WikiWord
 
 
 def wiki_create(request, title):
-    title = title
+    title = title.lower()
     if request.method == 'POST':
         form = WikiWordForm(request.POST)
         if form.is_valid():
