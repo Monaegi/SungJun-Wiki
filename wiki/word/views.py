@@ -8,6 +8,7 @@ from word.models import WikiWord
 
 
 def wiki_create(request, title):
+    title = title.lower()
     # 생성하려는 단어가 이미 데이터베이스에 있는 경우 해당 단어의 detail url로 이동
     if WikiWord.objects.filter(title=title).exists():
         return redirect('wiki-detail', title=title)
