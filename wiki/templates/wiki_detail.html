@@ -15,6 +15,12 @@
         <div>
             text: {{ text|safe|linebreaksbr }}
         </div>
+        <div>
+            연관 검색어:
+            {% for relevant_instance in relevant_instances %}
+            <a href="{% url 'wiki-detail' title=relevant_instance.title %}">{{ relevant_instance.title }}</a>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>
