@@ -41,16 +41,21 @@ def wiki_detail(request, title):
         relevant_instances = instance.similar()
 
         for item in text_to_list:
+            pure_item = item.replace('**', '') if item.count('**') == 2 else item
+            sub_item = item
             # 본문의 단어가 특정 Title과 일치하거나 Camel 단어이면 링크 걸림
             # Camel의 정의 : 맨 첫 글자가 대문자이고, 단어 중간에 대문자가 한번 이상 더 들어가는 단어
-            if item.lower() in title_list or item in camel_list:
-                text = text.replace(item, f'<a href="/wiki/detail/{item}">{item}</a>')
+            if pure_item.lower() in title_list or pure_item in camel_list:
+                sub_item = f'<a href="/wiki/detail/{pure_item}">{pure_item}</a>'
             # http:// 또는 https://로 시작하는 단어도 링크 걸어 줌
-            elif item.startswith('http://') or item.startswith('https://'):
-                text = text.replace(item, f'<a href="{item}">{item}</a>')
+            elif pure_item.startswith('http://') or pure_item.startswith('https://'):
+                sub_item = f'<a href="{pure_item}">{pure_item}</a>'
             # [로 시작하고 ]로 끝나는 단어는 대괄호를 삭제하여 본문에 나타나도록 하며 링크를 걸어 줌
-            elif item.startswith('[') and item.endswith(']'):
-                text = text.replace(item, f'<a href="/wiki/detail/{item[1:-1]}">{item[1:-1]}</a>')
+            elif pure_item.startswith('[') and pure_item.endswith(']'):
+                sub_item = f'<a href="/wiki/detail/{pure_item[1:-1]}">{pure_item[1:-1]}</a>'
+
+            text = text.replace(item, f'<strong>{sub_item}</strong>') \
+                if item.count('**') == 2 else text.replace(item, sub_item)
 
         context = {
             'instance': instance,
